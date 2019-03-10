@@ -16,7 +16,10 @@ namespace GZipTest
         static void Main(string[] args)
         {
             var compressor = new MultitreadFileCompressor(4);
-            compressor.CompressFile(@"C:\Users\Ilfat\source\repos\GZipTest\sample.txt", @"C:\Users\Ilfat\source\repos\GZipTest\sample.mzip");
+            var resultFileName = @"C:\Users\Ilfat\source\repos\GZipTest\1.ISO.mzip";
+            //compressor.CompressFile(@"C:\Users\Ilfat\source\repos\GZipTest\1.ISO", resultFileName);
+            compressor.DecompressFile(resultFileName, @"C:\Users\Ilfat\source\repos\GZipTest\1_decompressed.ISO");
+
         }
     }
 }

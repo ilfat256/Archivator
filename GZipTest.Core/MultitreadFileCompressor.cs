@@ -21,7 +21,7 @@ namespace GZipTest.Core
 
         public MultitreadFileCompressor(int threadCount)
         {
-            _readingBufferSize = 999;
+            _readingBufferSize = 8000;
             _readingQueue = new ConcurrentQueueBuffer<Block>(20);
             _writingQueue = new ConcurrentQueueBuffer<Block>(20);
             _threadCount = threadCount;
@@ -52,7 +52,6 @@ namespace GZipTest.Core
                 //}
                 //all work done
 
-                DecompressFile(resultFileName, @"C:\Users\Ilfat\source\repos\GZipTest\sample_decompressed.txt");
             }
             catch (IOException exception)
             {
@@ -198,6 +197,7 @@ namespace GZipTest.Core
                     else
                     {
                         block = buffer[blockIndex];
+                        buffer.RemoveAt(blockIndex);
                     }
 
                     if (block == null)
