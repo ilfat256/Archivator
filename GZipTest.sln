@@ -5,6 +5,10 @@ VisualStudioVersion = 15.0.28307.329
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GZipTest.Core", "GZipTest.Core\GZipTest.Core.csproj", "{00B1117A-BC88-4029-B2EA-EFF84AA3BE33}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GZipTest", "GZipTest\GZipTest.csproj", "{0898760D-6182-4183-8149-BD060393B34D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GZipTest.Core.Tests", "GZipTest.Core.Tests\GZipTest.Core.Tests.csproj", "{93EDCC11-E3DC-415F-8173-94657556FC60}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{00B1117A-BC88-4029-B2EA-EFF84AA3BE33}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{00B1117A-BC88-4029-B2EA-EFF84AA3BE33}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{00B1117A-BC88-4029-B2EA-EFF84AA3BE33}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0898760D-6182-4183-8149-BD060393B34D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0898760D-6182-4183-8149-BD060393B34D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0898760D-6182-4183-8149-BD060393B34D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0898760D-6182-4183-8149-BD060393B34D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93EDCC11-E3DC-415F-8173-94657556FC60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93EDCC11-E3DC-415F-8173-94657556FC60}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93EDCC11-E3DC-415F-8173-94657556FC60}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93EDCC11-E3DC-415F-8173-94657556FC60}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
