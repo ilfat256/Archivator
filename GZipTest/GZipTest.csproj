@@ -48,6 +48,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Domain\CommandFactory.cs" />
+    <Compile Include="Domain\Decompress.cs" />
+    <Compile Include="Domain\Compress.cs" />
+    <Compile Include="Domain\Options.cs" />
+    <Compile Include="Exceptions\UnsupportedCommandException.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -61,5 +66,6 @@
       <Name>GZipTest.Core</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
