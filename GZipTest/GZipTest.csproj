@@ -48,11 +48,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Domain\CommandFactory.cs" />
-    <Compile Include="Domain\Decompress.cs" />
-    <Compile Include="Domain\Compress.cs" />
-    <Compile Include="Domain\Options.cs" />
+    <Compile Include="Domain\ByteArrayExtensions.cs" />
+    <Compile Include="Domain\CompressedStream.cs" />
+    <Compile Include="Domain\DecompressedFileStream.cs" />
+    <Compile Include="Domain\FileDecompressor.cs" />
+    <Compile Include="Domain\FileCompressor.cs" />
+    <Compile Include="Domain\Models\Block.cs" />
+    <Compile Include="Domain\Models\CompressedAdditionalInfo.cs" />
+    <Compile Include="Domain\Models\CompressedBlockOffset.cs" />
+    <Compile Include="Exceptions\AdditionalInfoException.cs" />
     <Compile Include="Exceptions\UnsupportedCommandException.cs" />
+    <Compile Include="GZipOptions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
