@@ -9,9 +9,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>GZipTest.Core</RootNamespace>
     <AssemblyName>GZipTest.Core</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -41,12 +42,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConcurrentQueue.cs" />
-    <Compile Include="ConcurrentQueueBuffer.cs" />
-    <Compile Include="MultitreadFileCompressor.cs" />
+    <Compile Include="Compressing\BlockGZipStream.cs" />
+    <Compile Include="Compressing\BlockGZipStreamMode.cs" />
+    <Compile Include="Exceptions\UnsupportedCommandException.cs" />
+    <Compile Include="Extensions\ByteArrayExtensions.cs" />
+    <Compile Include="FileCompressor.cs" />
+    <Compile Include="FileDecompressor.cs" />
+    <Compile Include="GZipOptions.cs" />
+    <Compile Include="Exceptions\AdditionalInfoException.cs" />
+    <Compile Include="Models\Block.cs" />
+    <Compile Include="Models\CompressedAdditionalInfo.cs" />
+    <Compile Include="Models\CompressedBlockInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PulseAllConcurrentQueueBuffered.cs" />
-    <Compile Include="ParallelWorker.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Parallel\Parallel.csproj">
+      <Project>{21217AD6-425B-43E7-9727-C19514284208}</Project>
+      <Name>Parallel</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
