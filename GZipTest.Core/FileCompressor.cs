@@ -21,7 +21,7 @@ namespace GZipTest.Core
             this.options = options;
             readingQueue = new ConcurrentQueueBuffer<Block>(options.TaskCount);
             writingQueue = new ConcurrentQueueBuffer<Block>(options.TaskCount);
-            compressingWorker = new Worker(options.ThreadCount, "CompressingWork");
+            compressingWorker = new Worker(options.ThreadsCount, "CompressingWork");
         }
 
         public void CompressAndSaveFile()
@@ -67,10 +67,10 @@ namespace GZipTest.Core
 
         public void ReadingTask()
         {
-            using (var fileStream = new FileStream(options.SourceFileName, FileMode.Open, FileAccess.Read, FileShare.None, options.FileStreamBufferSize))
+            using (var fileStream = new FileStream(options.SourceFileName, FileMode.Open, FileAccess.Read, FileShare.None))
             {
                 long fileSizeBytes = options.SourceFileBytesCount;
-                int blockSize = options.ReadingBlockSize;
+                int blockSize = options.ReadingBlockSizeBytes;
                 long blockCount = fileSizeBytes / blockSize;
                 for (long i = 0; i < blockCount; i++)
                 {
@@ -92,9 +92,9 @@ namespace GZipTest.Core
 
         public void AddStopTasksForWorker()
         {
-            for (int i = 0; i < options.ThreadCount; i++)
+            for (int i = 0; i < options.ThreadsCount; i++)
             {
-                readingQueue.Enqueue(stopWorkingTask); //ended task for flush file
+                readingQueue.Enqueue(stopWorkingTask);
             }
         }
 

@@ -1,5 +1,6 @@
 ﻿using GZipTest.Core;
 using System;
+using System.Runtime.InteropServices;
 
 namespace GZipTest
 {
@@ -8,7 +9,9 @@ namespace GZipTest
         static void Main(string[] args)
         {
             //System.AppDomain.CurrentDomain.UnhandledException += UnhandledExceptionHandler;
-            var options = new GZipOptions(args);
+
+            var availableRam = GetAvailableRamBytes();
+            var options = new GZipOptions(args, availableRam, Environment.ProcessorCount);
             switch (options.CommandName)
             {
                 case "compress":
@@ -29,5 +32,19 @@ namespace GZipTest
             Console.ReadKey();
             Environment.Exit(1);
         }
+
+        static int GetAvailableRamBytes()
+        {
+            ulong installedRamMemoryKB;
+            GetPhysicallyInstalledSystemMemory(out installedRamMemoryKB);
+
+            int maxRam32bitProcessKB = int.MaxValue / 1024;
+            int availableRamBytes = installedRamMemoryKB > (ulong)maxRam32bitProcessKB ? int.MaxValue : (int)installedRamMemoryKB * 1024;
+            return availableRamBytes;
+        }
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool GetPhysicallyInstalledSystemMemory(out ulong MemoryInKilobytes);
     }
 }

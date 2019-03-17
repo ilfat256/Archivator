@@ -21,7 +21,7 @@ namespace GZipTest.Core
             this.options = options;
             readingQueue = new ConcurrentQueueBuffer<Block>(options.TaskCount);
             writingQueue = new ConcurrentQueueBuffer<Block>(options.TaskCount);
-            decompressingWorker = new Worker(options.ThreadCount, "DecompressingWork");
+            decompressingWorker = new Worker(options.ThreadsCount, "DecompressingWork");
         }
 
         public void DecompressAndSaveFile()
@@ -63,7 +63,6 @@ namespace GZipTest.Core
 
         private void ReadingTask()
         {
-            //buffer size of FileStream & Should be closed after closing adapter
             using (Stream fileStream = new FileStream(options.SourceFileName, FileMode.Open, FileAccess.Read))
             {
                 using (BlockGZipStream gzipStream = new BlockGZipStream(fileStream, BlockGZipStreamMode.Decompressing))
@@ -75,7 +74,7 @@ namespace GZipTest.Core
                 }
             }
 
-            for (int i = 0; i < options.ThreadCount; i++)
+            for (int i = 0; i < options.ThreadsCount; i++)
             {
                 readingQueue.Enqueue(stopWorkingTask);
             }
@@ -83,7 +82,7 @@ namespace GZipTest.Core
 
         private void WritingTask()
         {
-            var buffer = new List<Block>(options.ThreadCount);
+            var buffer = new List<Block>(options.ThreadsCount);
             int blockNumberToWrite = 0;
             using (FileStream destination = new FileStream(options.ResultFileName, FileMode.Create))
             {

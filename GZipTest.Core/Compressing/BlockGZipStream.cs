@@ -7,7 +7,7 @@ namespace GZipTest.Core.Compressing
     public class BlockGZipStream : IDisposable
     {
         private Stream stream;
-        private CompressedFileAdditionalInfo additionalInfo = new CompressedFileAdditionalInfo();
+        private CompressedFileAdditionalInfo additionalInfo;
         private bool shouldWriteAdditionalInfoOnDisposing;
 
         public int Lenght => additionalInfo.Lenght;
@@ -16,11 +16,12 @@ namespace GZipTest.Core.Compressing
         {
             if (mode == BlockGZipStreamMode.Compressing)
             {
+                additionalInfo = new CompressedFileAdditionalInfo(1000);
                 shouldWriteAdditionalInfoOnDisposing = true;
             }
             else
             {
-                additionalInfo = additionalInfo.GetFrom(stream);
+                additionalInfo = CompressedFileAdditionalInfo.GetFrom(stream);
             }
             IsSupportedStream(stream, mode);
             this.stream = stream;

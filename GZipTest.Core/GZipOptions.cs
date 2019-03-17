@@ -13,27 +13,27 @@ namespace GZipTest
     {
         private FileInfo sourceFile;
         private FileInfo resultFile;
-        public int FileStreamBufferSize { get; private set; }
+        private int availableRamBytes;
 
         public List<string> SupportedCommands { get; } = new List<string> { "compress", "decompress" };
         public string CommandName { get; private set; }
-
         public int TaskCount { get; private set; }
-        public int ThreadCount { get; private set; }
-
-        public int ReadingBlockSize { get; private set; }
+        public int ThreadsCount { get; private set; }
+        public int ReadingBlockSizeBytes { get; private set; }
         public string SourceFileName => sourceFile.FullName;
         public long SourceFileBytesCount => sourceFile.Length;
         public string ResultFileName => resultFile.FullName;
         public long ResultFileBytesCount => resultFile.Length;
 
-        public GZipOptions(string[] args)
+        public GZipOptions(string[] args, int availableRam, int availableThreadsCount)
         {
             if (args.Count() < 3)
             {
                 PrintHelpMessage();
             }
 
+            this.availableRamBytes = availableRam / 3 * 2;
+            ThreadsCount = availableThreadsCount;
             CommandName = args[0];
             SetCommand(CommandName);
 
@@ -45,22 +45,11 @@ namespace GZipTest
 
         private void ConfigureResourceUtilizationOptions()
         {
-            FileStreamBufferSize = 1024 * 10;
-            ThreadCount = Environment.ProcessorCount;
-            
-            ulong installedRamMemoryBytes;
-#warning check return?
-            GetPhysicallyInstalledSystemMemory(out installedRamMemoryBytes);
-#warning why 25?
-            var tasksByThread = 5; //должны занимать, не больше памяти деленной на 2
-            TaskCount = tasksByThread * ThreadCount;
-            var originalFileReadingBlockSize = 1024 * 8;//installedRamMemoryBytes / 25 * 8; blockCount should be smarller int.maxvalue
-            
-            if (originalFileReadingBlockSize > int.MaxValue)
-            {
-                originalFileReadingBlockSize = int.MaxValue;
-            }
-            ReadingBlockSize = (int)originalFileReadingBlockSize;
+            var tasksByThread = 5;
+            TaskCount = tasksByThread * ThreadsCount;
+            ReadingBlockSizeBytes = availableRamBytes / TaskCount;
+            int maxBlockSize = 10 * 1024 * 1024;
+            ReadingBlockSizeBytes = ReadingBlockSizeBytes > maxBlockSize ? maxBlockSize : ReadingBlockSizeBytes;
         }
 
         private void SetCommand(string commandName)
@@ -102,9 +91,5 @@ namespace GZipTest
             Console.WriteLine($"Bad option {badOption}. {message}");
             PrintHelpMessage();
         }
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        static extern bool GetPhysicallyInstalledSystemMemory(out ulong MemoryInKilobytes);
     }
 }

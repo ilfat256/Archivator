@@ -7,14 +7,15 @@ namespace GZipTest.Core.Models
 {
     internal class CompressedFileAdditionalInfo
     {
-        private List<CompressedBlockInfo> blockOffsets = new List<CompressedBlockInfo>();
+        private List<CompressedBlockInfo> blockOffsets;
         public int Lenght => blockOffsets.Count;
         
-        public CompressedFileAdditionalInfo()
+        public CompressedFileAdditionalInfo(int blocksCapacity)
         {
+            blockOffsets = new List<CompressedBlockInfo>(blocksCapacity);
         }
 
-        private CompressedFileAdditionalInfo(long[] blockOffsets, int[] blockLeghts)
+        private CompressedFileAdditionalInfo(long[] blockOffsets, int[] blockLeghts, int blocksCapacity) : this(blocksCapacity)
         {
             for (int i = 0; i < blockOffsets.Length; i++)
             {
@@ -71,7 +72,7 @@ namespace GZipTest.Core.Models
             return lenghts;
         }
 
-        public CompressedFileAdditionalInfo GetFrom(Stream stream)
+        public static CompressedFileAdditionalInfo GetFrom(Stream stream)
         {
             try
             {
@@ -91,7 +92,7 @@ namespace GZipTest.Core.Models
                 stream.Read(blockSizes, 0, blockSizes.Length);
                 int[] sizes = DeserializeLenght(blockSizes);
 
-                return new CompressedFileAdditionalInfo(offsets, sizes);
+                return new CompressedFileAdditionalInfo(offsets, sizes, blocksCount);
             }
             catch (Exception ex)
             {
@@ -101,7 +102,7 @@ namespace GZipTest.Core.Models
 
         }
 
-        private int GetBlocksCount(Stream stream)
+        private static int GetBlocksCount(Stream stream)
         {
             //blocksCount stored in last 4 bytes
             var blocksCountBytes = new byte[sizeof(int)];
@@ -110,7 +111,7 @@ namespace GZipTest.Core.Models
             return BitConverter.ToInt32(blocksCountBytes, 0);
         }
 
-        private long[] Deserialize(byte[] additionalInfo)
+        private static long[] Deserialize(byte[] additionalInfo)
         {
             int offset = 0;
             int count = additionalInfo.Length / 8;
@@ -123,7 +124,7 @@ namespace GZipTest.Core.Models
             return info;
         }
 
-        private int[] DeserializeLenght(byte[] additionalInfo)
+        private static int[] DeserializeLenght(byte[] additionalInfo)
         {
             int offset = 0;
             int count = additionalInfo.Length / 4;
