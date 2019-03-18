@@ -2,14 +2,16 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace GZipTest.Core.Models
 {
-    internal class CompressedFileAdditionalInfo
+    public class CompressedFileAdditionalInfo
     {
         private List<CompressedBlockInfo> blockOffsets;
         public int Lenght => blockOffsets.Count;
-        
+        public int GetMaxStoredBlockSizeBytes() => blockOffsets.Count() > 0 ? blockOffsets.Max(b => b.Length) : 0;
+
         public CompressedFileAdditionalInfo(int blocksCapacity)
         {
             blockOffsets = new List<CompressedBlockInfo>(blocksCapacity);

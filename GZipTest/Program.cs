@@ -38,8 +38,8 @@ namespace GZipTest
             ulong installedRamMemoryKB;
             GetPhysicallyInstalledSystemMemory(out installedRamMemoryKB);
 
-            int maxRam32bitProcessKB = int.MaxValue / 1024;
-            int availableRamBytes = installedRamMemoryKB > (ulong)maxRam32bitProcessKB ? int.MaxValue : (int)installedRamMemoryKB * 1024;
+            int maxRamFor32bitProcessKB = int.MaxValue / 1024;
+            int availableRamBytes = installedRamMemoryKB > (ulong)maxRamFor32bitProcessKB ? int.MaxValue : (int)installedRamMemoryKB * 1024;
             return availableRamBytes;
         }
 

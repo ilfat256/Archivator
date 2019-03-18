@@ -1,4 +1,5 @@
 ﻿using GZipTest.Core;
+using GZipTest.Core.Compressing;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,7 +15,7 @@ namespace GZipTest
         private FileInfo sourceFile;
         private FileInfo resultFile;
         private int availableRamBytes;
-
+        public int TasksByTreadByDefault = 5;
         public List<string> SupportedCommands { get; } = new List<string> { "compress", "decompress" };
         public string CommandName { get; private set; }
         public int TaskCount { get; private set; }
@@ -32,7 +33,7 @@ namespace GZipTest
                 PrintHelpMessage();
             }
 
-            this.availableRamBytes = availableRam / 3 * 2;
+            this.availableRamBytes = availableRam;
             ThreadsCount = availableThreadsCount;
             CommandName = args[0];
             SetCommand(CommandName);
@@ -45,11 +46,40 @@ namespace GZipTest
 
         private void ConfigureResourceUtilizationOptions()
         {
-            var tasksByThread = 5;
-            TaskCount = tasksByThread * ThreadsCount;
-            ReadingBlockSizeBytes = availableRamBytes / TaskCount;
-            int maxBlockSize = 10 * 1024 * 1024;
-            ReadingBlockSizeBytes = ReadingBlockSizeBytes > maxBlockSize ? maxBlockSize : ReadingBlockSizeBytes;
+            availableRamBytes = availableRamBytes / 2;
+            if (CommandName == "compress")
+            {
+                ReadingBlockSizeBytes = availableRamBytes / ThreadsCount;
+                int maxBlockSizeBytes = 1 * 1024 * 1024;
+                ReadingBlockSizeBytes = ReadingBlockSizeBytes > maxBlockSizeBytes ? maxBlockSizeBytes : ReadingBlockSizeBytes;               
+            }
+            else
+            {
+                using (Stream fileStream = new FileStream(SourceFileName, FileMode.Open, FileAccess.Read))
+                {
+                    using (BlockGZipStream gzipStream = new BlockGZipStream(fileStream, BlockGZipStreamMode.Decompressing))
+                    {
+                        ReadingBlockSizeBytes = gzipStream.GetMaxStoredBlockSizeBytes();
+                    }
+                }
+            }
+
+            if (availableRamBytes < ReadingBlockSizeBytes)
+            {
+                BadOption("source-filename", "Sorry. You don't have enough ram.");
+            }
+
+            if (availableRamBytes / ReadingBlockSizeBytes < ThreadsCount)
+            {
+                ThreadsCount = availableRamBytes / ReadingBlockSizeBytes;
+            }
+
+            var taskByThread = availableRamBytes / ReadingBlockSizeBytes / ThreadsCount;
+            if (taskByThread > TasksByTreadByDefault)
+            {
+                taskByThread = TasksByTreadByDefault;
+            }
+            TaskCount = taskByThread * ThreadsCount;
         }
 
         private void SetCommand(string commandName)

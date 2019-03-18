@@ -9,6 +9,7 @@ namespace GZipTest.Core.Compressing
         private Stream stream;
         private CompressedFileAdditionalInfo additionalInfo;
         private bool shouldWriteAdditionalInfoOnDisposing;
+        public int GetMaxStoredBlockSizeBytes() => additionalInfo.GetMaxStoredBlockSizeBytes();
 
         public int Lenght => additionalInfo.Lenght;
 
